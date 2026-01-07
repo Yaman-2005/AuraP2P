@@ -7,7 +7,10 @@ interface AppState {
   addPeer: (peer: Peer) => void
   removePeer: (id: string) => void
   updatePeer: (id: string, updates: Partial<Peer>) => void
-
+  isOnline: boolean
+isConnectedToSwarm: boolean
+setOnline: (v: boolean) => void
+setConnectedToSwarm: (v: boolean) => void
   // Models
   models: Model[]
   activeModel: Model | null
@@ -39,7 +42,7 @@ const mockPeers: Peer[] = [
   {
     id: 'local-1',
     name: 'RTX Laptop (You)',
-    ip: '192.168.1.100',
+    ip: '192.168.0.105',
     status: 'online',
     hardware: {
       type: 'laptop',
@@ -56,7 +59,7 @@ const mockPeers: Peer[] = [
   {
     id: 'server-1',
     name: 'Home Server',
-    ip: '192.168.1.101',
+    ip: '192.168.0.111',
     status: 'online',
     hardware: {
       type: 'server',
@@ -73,7 +76,7 @@ const mockPeers: Peer[] = [
   {
     id: 'desktop-1',
     name: 'Office Desktop',
-    ip: '192.168.1.102',
+    ip: '192.168.0.103',
     status: 'syncing',
     hardware: {
       type: 'desktop',
@@ -120,6 +123,11 @@ const mockModels: Model[] = [
 ]
 
 export const useAppStore = create<AppState>((set) => ({
+  isOnline: false,
+  isConnectedToSwarm: false,
+
+  setOnline: (v) => set({ isOnline: v }),
+  setConnectedToSwarm: (v) => set({ isConnectedToSwarm: v }),
   // Peers
   peers: mockPeers,
   addPeer: (peer) => set((state) => ({ peers: [...state.peers, peer] })),
@@ -165,7 +173,7 @@ export const useAppStore = create<AppState>((set) => ({
     currentThroughput: 20.8,
     averageLatency: 8.5,
   },
-
+  
   // UI
   sidebarOpen: true,
   setSidebarOpen: (open) => set({ sidebarOpen: open }),

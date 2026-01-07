@@ -10,6 +10,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { Message } from '@/types'
+import { ConnectButton } from '@/components/ui/ConnectButton'
+
 
 export function ChatView() {
   const {
@@ -21,7 +23,7 @@ export function ChatView() {
     connect,
     sendPrompt,
   } = useWSStore()
-
+  const { isConnectedToSwarm } = useAppStore()
   const { activeModel, peers } = useAppStore()
 
   const [input, setInput] = useState('')
@@ -81,6 +83,9 @@ export function ChatView() {
               Powered by {activePeers.length} peers
             </p>
           </div>
+          <div className="flex items-center gap-3">
+  <ConnectButton />
+  </div>
 
           <div className="flex items-center gap-3">
             {activeModel && (
@@ -128,7 +133,7 @@ export function ChatView() {
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask anything…"
+              placeholder= { isConnectedToSwarm ? "Type your message..." : "Connect to swarm to start chatting..." }
               className="pr-14 h-14"
               disabled={isGenerating}
             />

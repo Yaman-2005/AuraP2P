@@ -8,29 +8,20 @@ import sys
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-
-# ---------------- CONFIG ----------------
 PROMPT_WORKER = "prompt.py"
 DEFAULT_SERVER_IP = "192.168.0.111"
 API_PORT = 8000
-# ---------------------------------------
-
 app = FastAPI(title="AuraP2P Node API")
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten later
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# ---------------- STATE ----------------
-
 NODE_ID = str(uuid.uuid4())[:8]
 ONLINE = False
 CONNECTED_SERVER: Optional[str] = None
-
 PEERS = [
     {
         "id": "peer-1",
@@ -49,30 +40,18 @@ PEERS = [
         "latency": 12,
     }
 ]
-
-# ---------------- MODELS ----------------
-
 class GoOnlineResponse(BaseModel):
     node_id: str
     status: str
-
-
 class ConnectRequest(BaseModel):
     ip: str
-
-
 class StatusResponse(BaseModel):
     node_id: str
     online: bool
     connected_server: Optional[str]
     peers: List[dict]
-
-
 class ChatRequest(BaseModel):
     prompt: str
-
-
-# ---------------- HELPERS ----------------
 
 def is_ip_reachable(ip: str, port: int = 5555) -> bool:
     try:
@@ -80,10 +59,6 @@ def is_ip_reachable(ip: str, port: int = 5555) -> bool:
             return True
     except Exception:
         return False
-
-
-# ---------------- API ENDPOINTS ----------------
-
 @app.post("/go-online", response_model=GoOnlineResponse)
 def go_online():
     global ONLINE
@@ -92,22 +67,14 @@ def go_online():
         "node_id": NODE_ID,
         "status": "online",
     }
-
-
 @app.post("/connect-to-swarm")
 def connect_to_swarm(req: ConnectRequest):
     global CONNECTED_SERVER
-
-    if not is_ip_reachable(req.ip):
-        return {"success": False, "error": "Peer not reachable"}
-
     CONNECTED_SERVER = req.ip
     return {
         "success": True,
         "connected_to": req.ip,
     }
-
-
 @app.get("/status", response_model=StatusResponse)
 def status():
     return {
@@ -116,73 +83,63 @@ def status():
         "connected_server": CONNECTED_SERVER,
         "peers": PEERS,
     }
-
-
-# ---------------- CHAT (STREAMING) ----------------
-
 @app.websocket("/chat")
 async def chat_ws(ws: WebSocket):
     await ws.accept()
     print("🔌 WS connected")
-
     try:
-        data = await ws.receive_json()
-        prompt = data.get("prompt")
-
-        if not prompt:
-            await ws.send_text("[ERROR] No prompt provided")
-            return
-
-        if not CONNECTED_SERVER:
-            await ws.send_text("[ERROR] Not connected to swarm")
-            return
-
-        print(f"📥 Prompt received: {prompt}")
-        print("🚀 Spawning prompt worker")
-
-        process = await asyncio.create_subprocess_exec(
-            sys.executable,
-            "-u",
-            PROMPT_WORKER,
-            prompt,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-
         while True:
-            chunk = await process.stdout.read(1)
-            if not chunk:
-                break
+            # 🔁 WAIT FOR NEXT PROMPT
+            data = await ws.receive_json()
+            prompt = data.get("prompt")
 
-            try:
-                await ws.send_text(chunk.decode("utf-8"))
-            except WebSocketDisconnect:
-                print("❌ Client disconnected during streaming")
-                process.kill()
-                return
+            if not prompt:
+                await ws.send_text(json.dumps({
+                    "type": "error",
+                    "message": "No prompt provided"
+                }))
+                continue
 
-        await process.wait()
-        print("✅ Worker finished")
+            if not ONLINE or not CONNECTED_SERVER:
+                await asyncio.sleep(2)  # demo delay
+                await ws.send_text(json.dumps({
+                    "type": "error",
+                    "code": "OUT_OF_MEMORY",
+                    "message": "Model cannot run locally. No swarm peers available."
+                }))
+                continue
 
-        await ws.send_text("__DONE__")
+            print(f"Prompt received: {prompt}")
+            print("Spawning prompt worker")
+
+            process = await asyncio.create_subprocess_exec(
+                sys.executable,
+                "-u",
+                PROMPT_WORKER,
+                prompt,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            while True:
+                chunk = await process.stdout.read(1)
+                if not chunk:
+                    break
+
+                try:
+                    await ws.send_text(chunk.decode("utf-8"))
+                except WebSocketDisconnect:
+                    print("Client disconnected during streaming")
+                    process.kill()
+                    return
+            await process.wait()
+            print("Worker finished")
+            await ws.send_text("__DONE__")
 
     except WebSocketDisconnect:
-        print("❌ Client disconnected before completion")
+        print("WS disconnected by client")
 
     except Exception as e:
-        print("❌ ERROR:", e)
-        try:
-            await ws.send_text(f"[ERROR] {e}")
-        except:
-            pass
-
-    # ✅ DO NOTHING ELSE
-    # FastAPI closes WS automatically
-
-
-
-# ---------------- ENTRY ----------------
-
+        print("WS ERROR:", e)
 if __name__ == "__main__":
     import uvicorn
 

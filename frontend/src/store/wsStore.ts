@@ -43,23 +43,52 @@ export const useWSStore = create<WSState>((set, get) => ({
     }
 
     ws.onmessage = (event) => {
-      if (event.data === '__DONE__') {
-        get().setIsGenerating(false)
-        return
-      }
+  // 1️⃣ DONE SIGNAL
+  if (event.data === '__DONE__') {
+    get().setIsGenerating(false)
+    return
+  }
 
-      // STREAM TOKEN
-      get().setMessages((prev) => {
-        if (prev.length === 0) return prev
-        const last = prev[prev.length - 1]
-        if (last.role !== 'assistant') return prev
+  // 2️⃣ TRY PARSE JSON (ERROR OR CONTROL MESSAGE)
+  try {
+    const data = JSON.parse(event.data)
 
-        return [
-          ...prev.slice(0, -1),
-          { ...last, content: last.content + event.data },
-        ]
-      })
-    }
+    if (data.type === 'error') {
+  get().setMessages((prev) => {
+    if (prev.length === 0) return prev
+
+    const last = prev[prev.length - 1]
+    if (last.role !== 'assistant') return prev
+
+    return [
+      ...prev.slice(0, -1),
+      {
+        ...last,
+        content: `❌ ${data.message}`,
+      },
+    ]
+  })
+
+  get().setIsGenerating(false)
+  return
+}
+  } catch {
+    // Not JSON → normal token stream
+  }
+
+  // 3️⃣ STREAM TOKEN
+  get().setMessages((prev) => {
+    if (prev.length === 0) return prev
+
+    const last = prev[prev.length - 1]
+    if (last.role !== 'assistant') return prev
+
+    return [
+      ...prev.slice(0, -1),
+      { ...last, content: last.content + event.data },
+    ]
+  })
+}
 
     ws.onerror = (err) => {
       console.error('❌ WS error', err)
