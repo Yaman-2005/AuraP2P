@@ -1,3 +1,6 @@
 venv/
 # Ignore ONNX data everywhere
 **/*.onnx.data
+**/*.onnx
+**/__pycache__/
+*.log
