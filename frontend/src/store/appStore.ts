@@ -16,6 +16,10 @@ interface AppState {
   // Chat
   messages: Message[]
   addMessage: (message: Message) => void
+
+  /** ✅ NEW — streaming token support */
+  appendToMessage: (id: string, chunk: string) => void
+
   clearMessages: () => void
   isGenerating: boolean
   setIsGenerating: (val: boolean) => void
@@ -119,10 +123,13 @@ export const useAppStore = create<AppState>((set) => ({
   // Peers
   peers: mockPeers,
   addPeer: (peer) => set((state) => ({ peers: [...state.peers, peer] })),
-  removePeer: (id) => set((state) => ({ peers: state.peers.filter((p) => p.id !== id) })),
+  removePeer: (id) =>
+    set((state) => ({ peers: state.peers.filter((p) => p.id !== id) })),
   updatePeer: (id, updates) =>
     set((state) => ({
-      peers: state.peers.map((p) => (p.id === id ? { ...p, ...updates } : p)),
+      peers: state.peers.map((p) =>
+        p.id === id ? { ...p, ...updates } : p
+      ),
     })),
 
   // Models
@@ -132,7 +139,19 @@ export const useAppStore = create<AppState>((set) => ({
 
   // Chat
   messages: [],
-  addMessage: (message) => set((state) => ({ messages: [...state.messages, message] })),
+  addMessage: (message) =>
+    set((state) => ({ messages: [...state.messages, message] })),
+
+  /** ✅ NEW — append streamed tokens */
+  appendToMessage: (id, chunk) =>
+    set((state) => ({
+      messages: state.messages.map((m) =>
+        m.id === id
+          ? { ...m, content: m.content + chunk }
+          : m
+      ),
+    })),
+
   clearMessages: () => set({ messages: [] }),
   isGenerating: false,
   setIsGenerating: (val) => set({ isGenerating: val }),
