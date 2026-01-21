@@ -1,16 +1,20 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Bot, User, Sparkles, Cpu, RotateCcw, Server } from 'lucide-react'
+import { Bot, User, Sparkles, Cpu, RotateCcw, Zap, Server } from 'lucide-react'
 import { useWSStore } from '@/store/wsStore'
 import { useAppStore } from '@/store/appStore'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { Message } from '@/types'
 import { ConnectButton } from '@/components/ui/ConnectButton'
+import Starfield from '@/components/effects/Starfield'
+import HorizonGlow from '@/components/effects/HorizonGlow'
+import Greeting from '@/components/features/Greeting'
+import QuickActions from '@/components/features/QuickActions'
+import GlassPromptBox from '@/components/features/GlassPromptBox'
 
 export function ChatView() {
   const {
@@ -45,9 +49,7 @@ export function ChatView() {
     }
   }, [messages, isConnecting])
 
-  /* ---------- SUBMIT ---------- */
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const doSubmit = async () => {
     if (!input.trim() || isGenerating) return
 
     // If not connected to swarm, show animation in chat
@@ -118,17 +120,30 @@ export function ChatView() {
     }, 6000)
   }
 
+  // submit handled via GlassPromptBox
+
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full flex flex-col relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 z-0 opacity-60">
+        <Starfield />
+        <HorizonGlow />
+      </div>
+
+      <div className="relative z-10 h-full flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-slate-800 bg-slate-900/50">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="p-6 lg:pl-16 border-b border-white/10 glass-elevated"
+      >
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-white flex items-center gap-2">
               <Sparkles className="w-6 h-6 text-cyan-400" />
               AI Chat
             </h1>
-            <p className="text-slate-400 text-sm">
+            <p className="text-white/50 text-sm">
               {isConnectedToSwarm 
                 ? `Powered by ${activePeers.length} peers`
                 : 'Not connected'
@@ -155,13 +170,55 @@ export function ChatView() {
             </Button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Messages */}
       <ScrollArea className="flex-1 p-6" ref={scrollRef}>
         <div className="max-w-4xl mx-auto space-y-6">
-          <AnimatePresence>
-            {messages.map((message) => (
+          {/* Welcome message when empty */}
+          {messages.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="text-center py-20"
+            >
+              <Greeting />
+              <p className="text-white/50 max-w-md mx-auto mb-8">
+                Start chatting with AI powered by your local swarm. Your queries are processed
+                across {activePeers.length} connected peers for maximum performance.
+              </p>
+              {/* Centered prompt input when empty */}
+              <div className="mt-10 flex justify-center">
+                <div className="w-full max-w-3xl">
+                  <GlassPromptBox
+                    value={input}
+                    onChange={setInput}
+                    onSubmit={doSubmit}
+                    disabled={isGenerating}
+                    placeholder="Ask anything... (processed across your swarm)"
+                  />
+                  <div className="flex items-center justify-between mt-3 text-xs text-white/50">
+                    <span className="flex items-center gap-2">
+                      <Zap className="w-3 h-3 text-cyan-400" />
+                      <span>{activePeers.length} peers ready</span>
+                      <span className="text-white/30">•</span>
+                      <span>~{(activePeers.reduce((acc, p) => acc + p.throughput, 0)).toFixed(1)} tok/s combined</span>
+                    </span>
+                    <span>Press Enter to send</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick actions under prompt */}
+              <div className="mt-8">
+                <QuickActions />
+              </div>
+            </motion.div>
+          )}
+
+          {/* Message list */}
+          <AnimatePresence mode="popLayout">
+            {messages.map((message, index) => (
               <motion.div
                 key={message.id}
                 initial={{ opacity: 0, y: 10 }}
@@ -196,11 +253,11 @@ export function ChatView() {
                     className="w-10 h-10 rounded-full border-4 border-cyan-500 border-t-transparent"
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Server className="w-5 h-5 text-cyan-400" />
+                    <Server className="w-5 h-5 text-cyan-500" />
                   </div>
                 </div>
 
-                <Card className="flex-1 px-4 py-3 bg-gradient-to-r from-slate-800/50 to-slate-900/50 border border-cyan-500/30">
+                <Card className="flex-1 px-4 py-3 glass border border-cyan-500/30">
                   <div className="flex items-center gap-2 mb-2">
                     <motion.div
                       animate={{
@@ -210,7 +267,7 @@ export function ChatView() {
                         duration: 1,
                         repeat: Infinity,
                       }}
-                      className="w-2 h-2 rounded-full bg-cyan-500"
+                      className="w-2 h-2 rounded-full bg-cyan-400"
                     />
                     <span className="text-cyan-400 font-medium">
                       Connecting to Swarm Network...
@@ -224,7 +281,7 @@ export function ChatView() {
                         key={index}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center gap-2 text-slate-300"
+                        className="flex items-center gap-2 text-white/70"
                       >
                         <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
                         <span className="text-sm">{advantage}</span>
@@ -268,11 +325,11 @@ export function ChatView() {
                 }}
                 className="flex items-start gap-4"
               >
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-cyan-600">
-                  <Bot />
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-cyan-500">
+                  <Bot className="text-white" />
                 </div>
 
-                <Card className="px-4 py-3 max-w-[80%] bg-slate-800/50 border border-red-500/30">
+                <Card className="px-4 py-3 max-w-[80%] glass border border-red-500/30">
                   <div className="flex items-center gap-3 mb-2">
                     <motion.div
                       animate={{
@@ -290,7 +347,7 @@ export function ChatView() {
                     </span>
                   </div>
                   
-                  <p className="text-slate-300 text-sm">
+                  <p className="text-white/60 text-sm">
                     Connect to the swarm network to use AI chat
                   </p>
                 </Card>
@@ -299,7 +356,7 @@ export function ChatView() {
           </AnimatePresence>
 
           {isGenerating && (
-            <div className="flex items-center gap-2 text-sm text-slate-400">
+            <div className="flex items-center gap-2 text-sm text-white/50">
               <Bot className="w-4 h-4 text-cyan-400" />
               Generating…
             </div>
@@ -307,32 +364,33 @@ export function ChatView() {
         </div>
       </ScrollArea>
 
-      {/* Input */}
-      <div className="p-6 border-t border-slate-800 bg-slate-900/50">
-        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto">
-          <div className="relative">
-            <Input
+      {/* Prompt at bottom when there are messages */}
+      {messages.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-6 border-t border-white/10 glass-elevated"
+        >
+          <div className="max-w-4xl mx-auto">
+            <GlassPromptBox
               value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your message..."
-              className="pr-14 h-14"
-              disabled={isGenerating || isConnecting}
+              onChange={setInput}
+              onSubmit={doSubmit}
+              disabled={isGenerating}
+              placeholder="Ask anything... (processed across your swarm)"
             />
-            <Button
-              type="submit"
-              size="icon"
-              className="absolute right-2 top-1/2 -translate-y-1/2"
-              disabled={!input.trim() || isGenerating || isConnecting}
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+            <div className="flex items-center justify-between mt-3 text-xs text-white/50">
+              <span className="flex items-center gap-2">
+                <Zap className="w-3 h-3 text-cyan-400" />
+                <span>{activePeers.length} peers ready</span>
+                <span className="text-white/30">•</span>
+                <span>~{(activePeers.reduce((acc, p) => acc + p.throughput, 0)).toFixed(1)} tok/s combined</span>
+              </span>
+              <span>Press Enter to send</span>
+            </div>
           </div>
-          {isConnecting && (
-            <p className="text-center text-cyan-400 text-sm mt-2">
-              Connecting to swarm... Please wait
-            </p>
-          )}
-        </form>
+        </motion.div>
+      )}
       </div>
     </div>
   )
@@ -347,14 +405,14 @@ function MessageBubble({ message }: { message: Message }) {
       <div
         className={cn(
           'w-10 h-10 rounded-xl flex items-center justify-center',
-          isUser ? 'bg-slate-700' : 'bg-cyan-600'
+          isUser ? 'glass border border-white/20' : 'bg-gradient-to-br from-cyan-500 to-violet-500'
         )}
       >
-        {isUser ? <User /> : <Bot />}
+        {isUser ? <User className="text-white" /> : <Bot className="text-white" />}
       </div>
 
-      <Card className="px-4 py-3 max-w-[80%] bg-slate-800/50">
-        <p className="whitespace-pre-wrap text-slate-100">
+      <Card className="px-4 py-3 max-w-[80%] glass">
+        <p className="whitespace-pre-wrap text-white">
           {message.content}
         </p>
       </Card>

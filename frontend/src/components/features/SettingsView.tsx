@@ -4,14 +4,12 @@ import {
   Wifi,
   Cpu,
   Shield,
-  Bell,
   Palette,
   Database,
   Globe,
   ChevronRight,
   Moon,
   Sun,
-  Monitor,
   ToggleLeft,
   ToggleRight,
   Info,
@@ -36,7 +34,7 @@ function SettingsSection({ title, description, icon: Icon, children }: SettingsS
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Icon className="w-5 h-5 text-cyan-400" />
+          <Icon className="w-5 h-5 text-cyan-500" />
           {title}
         </CardTitle>
         <CardDescription>{description}</CardDescription>
@@ -56,17 +54,17 @@ interface ToggleSettingProps {
 function ToggleSetting({ label, description, enabled, onToggle }: ToggleSettingProps) {
   return (
     <div
-      className="flex items-center justify-between p-4 rounded-xl bg-slate-800/30 hover:bg-slate-800/50 transition-colors cursor-pointer"
+      className="flex items-center justify-between p-4 rounded-xl glass hover:bg-white/8 transition-colors cursor-pointer border border-white/8"
       onClick={onToggle}
     >
       <div>
         <p className="font-medium text-white">{label}</p>
-        {description && <p className="text-sm text-slate-400">{description}</p>}
+        {description && <p className="text-sm text-white/50">{description}</p>}
       </div>
       {enabled ? (
         <ToggleRight className="w-8 h-8 text-cyan-400" />
       ) : (
-        <ToggleLeft className="w-8 h-8 text-slate-500" />
+        <ToggleLeft className="w-8 h-8 text-white/40" />
       )}
     </div>
   )
@@ -102,12 +100,13 @@ export function SettingsView() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
+          className="lg:pl-16"
         >
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Settings className="w-6 h-6 text-cyan-400" />
             Settings
           </h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <p className="text-white/60 text-sm mt-1">
             Configure your AuraP2P node and swarm preferences
           </p>
         </motion.div>
@@ -125,7 +124,7 @@ export function SettingsView() {
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm text-slate-400 mb-2 block">
+                <label className="text-sm text-white/50 mb-2 block">
                   P2P Listen Port
                 </label>
                 <Input
@@ -135,7 +134,7 @@ export function SettingsView() {
                 />
               </div>
               <div>
-                <label className="text-sm text-slate-400 mb-2 block">
+                <label className="text-sm text-white/50 mb-2 block">
                   Max Peer Connections
                 </label>
                 <Input
@@ -173,33 +172,33 @@ export function SettingsView() {
             description="Manage how your hardware is utilized"
             icon={Cpu}
           >
-            <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700">
+            <div className="p-4 rounded-xl glass border border-white/10">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <p className="font-medium text-white">Hardware Acceleration</p>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-white/50">
                     Current: DirectML (RTX 2050)
                   </p>
                 </div>
                 <Badge variant="success">Detected</Badge>
               </div>
               <div className="grid grid-cols-3 gap-4 text-sm">
-                <div className="p-3 rounded-lg bg-slate-900/50">
-                  <p className="text-slate-400">VRAM</p>
+                <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                  <p className="text-white/50">VRAM</p>
                   <p className="text-white font-bold">4GB</p>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-900/50">
-                  <p className="text-slate-400">RAM</p>
+                <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                  <p className="text-white/50">RAM</p>
                   <p className="text-white font-bold">16GB</p>
                 </div>
-                <div className="p-3 rounded-lg bg-slate-900/50">
-                  <p className="text-slate-400">Threads</p>
+                <div className="p-3 rounded-lg bg-white/5 border border-white/10">
+                  <p className="text-white/50">Threads</p>
                   <p className="text-white font-bold">14</p>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/30">
+            <div className="flex items-center gap-2 p-4 rounded-xl bg-cyan-500/10 border border-cyan-400/30">
               <Info className="w-5 h-5 text-cyan-400 shrink-0" />
               <p className="text-sm text-cyan-200">
                 AuraP2P automatically selects DirectML for NVIDIA GPUs and OpenVINO for Intel CPUs.
@@ -233,11 +232,11 @@ export function SettingsView() {
               onToggle={() => toggle('cosmosDb')}
             />
 
-            <div className="p-4 rounded-xl bg-slate-800/30 border border-slate-700">
+            <div className="p-4 rounded-xl glass border border-white/10">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="font-medium text-white">Connection Status</p>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-white/50">
                     {settings.fluidRelay ? 'Connected to Azure Fluid Relay' : 'Running in local mode'}
                   </p>
                 </div>
@@ -288,12 +287,12 @@ export function SettingsView() {
             icon={Palette}
           >
             <div className="flex items-center gap-3">
-              <p className="text-slate-400">Theme</p>
-              <div className="flex items-center gap-2 p-1 rounded-lg bg-slate-800 border border-slate-700">
+              <p className="text-white/60">Theme</p>
+              <div className="flex items-center gap-2 p-1 rounded-lg glass border border-white/6">
                 <button
                   className={cn(
-                    'p-2 rounded-md transition-colors',
-                    !settings.darkMode && 'bg-slate-700 text-white'
+                    'p-2 rounded-md transition-colors text-white/60 hover:text-white',
+                    !settings.darkMode && 'bg-white/10 text-white'
                   )}
                   onClick={() => setSettings((s) => ({ ...s, darkMode: false }))}
                 >
@@ -301,8 +300,8 @@ export function SettingsView() {
                 </button>
                 <button
                   className={cn(
-                    'p-2 rounded-md transition-colors',
-                    settings.darkMode && 'bg-slate-700 text-white'
+                    'p-2 rounded-md transition-colors text-white/60 hover:text-white',
+                    settings.darkMode && 'bg-white/10 text-white'
                   )}
                   onClick={() => setSettings((s) => ({ ...s, darkMode: true }))}
                 >
@@ -335,18 +334,18 @@ export function SettingsView() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-white">AuraP2P</h3>
-                    <p className="text-sm text-slate-400">
+                    <p className="text-sm text-white/50">
                       Decentralized AI for the Masses
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
                   <Badge variant="info">v0.1.0-alpha</Badge>
-                  <p className="text-xs text-slate-500 mt-1">MIT License</p>
+                  <p className="text-xs text-white/40 mt-1">MIT License</p>
                 </div>
               </div>
-              <div className="mt-6 pt-6 border-t border-slate-800 flex items-center justify-between">
-                <p className="text-sm text-slate-400">
+              <div className="mt-6 pt-6 border-t border-white/10 flex items-center justify-between">
+                <p className="text-sm text-white/50">
                   Recycling E-Waste into a Global AI Supercomputer
                 </p>
                 <Button variant="ghost" size="sm">

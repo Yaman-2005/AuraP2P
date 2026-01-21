@@ -65,8 +65,8 @@ export function ConnectButton() {
         animate={{ opacity: 1, scale: 1 }}
         className="relative group"
       >
-        <div className="absolute -inset-1 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur-lg opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
-        <div className="relative flex items-center gap-3 px-4 py-3 bg-slate-900 rounded-xl border border-green-500/30 backdrop-blur-sm">
+        <div className="absolute -inset-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl blur-lg opacity-50 group-hover:opacity-75 transition duration-1000 group-hover:duration-200 animate-pulse"></div>
+        <div className="relative flex items-center gap-3 px-4 py-3 glass rounded-xl border border-green-400/30 shadow-lg shadow-green-500/20">
           <div className="relative">
             <div className="absolute inset-0 bg-green-500 rounded-full blur-md animate-ping"></div>
             <div className="relative w-8 h-8 rounded-full bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center">
@@ -75,7 +75,7 @@ export function ConnectButton() {
           </div>
           <div className="flex flex-col">
             <span className="text-green-400 font-semibold">Connected to Swarm</span>
-            <span className="text-xs text-slate-400">{DEFAULT_SWARM_IP}</span>
+            <span className="text-xs text-white/50">{DEFAULT_SWARM_IP}</span>
           </div>
           <motion.div
             animate={{ rotate: 360 }}
@@ -99,7 +99,7 @@ export function ConnectButton() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="mb-3 p-3 bg-red-500/10 border border-red-500/30 rounded-lg backdrop-blur-sm"
+            className="mb-3 p-3 glass border border-red-500/30 rounded-lg"
           >
             <div className="flex items-center gap-2 text-red-400">
               <WifiOff className="w-4 h-4" />
@@ -134,12 +134,11 @@ export function ConnectButton() {
             relative w-full min-w-[200px] 
             ${loading ? 'px-8' : 'px-6'}
             py-6 text-base font-semibold
-            bg-gradient-to-r from-slate-900 via-slate-900 to-slate-900
-            border border-cyan-500/50
-            shadow-lg shadow-cyan-500/30
-            hover:shadow-cyan-500/50 hover:scale-[1.02]
+            glass
+            border border-cyan-400/40
+            shadow-lg shadow-cyan-500/20
+            hover:shadow-cyan-500/40 hover:scale-[1.02]
             active:scale-[0.98]
-            backdrop-blur-xl
             overflow-hidden
           `}
         >
@@ -174,7 +173,7 @@ export function ConnectButton() {
                   <Loader2 className="w-5 h-5 text-cyan-400" />
                 </motion.div>
                 <div className="text-center">
-                  <div className="text-cyan-300">Connecting to Swarm...</div>
+                  <div className="text-cyan-400">Connecting to Swarm...</div>
                   <div className="text-xs text-cyan-400/70 mt-1">
                     {progress < 50 ? "Going online" : "Establishing connection"}
                   </div>
@@ -184,12 +183,12 @@ export function ConnectButton() {
               <>
                 <Rocket className="w-6 h-6 text-cyan-400 group-hover:scale-110 transition-transform" />
                 <div className="text-center">
-                  <div className="text-cyan-300">Connect to Swarm</div>
+                  <div className="text-cyan-400">Connect to Swarm</div>
                   <div className="text-xs text-cyan-400/70 mt-1">
                     Click to establish connection
                   </div>
                 </div>
-                <Wifi className="w-5 h-5 text-cyan-400/50" />
+                <Wifi className="w-5 h-5 text-cyan-400/60" />
               </>
             )}
           </div>
@@ -197,14 +196,14 @@ export function ConnectButton() {
       </div>
 
       {/* Status indicators */}
-      <div className="flex items-center justify-center gap-4 mt-4 text-xs text-slate-400">
+      <div className="flex items-center justify-center gap-4 mt-4 text-xs text-white/50">
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500 animate-pulse' : 'bg-slate-600'}`} />
+          <div className={`w-2 h-2 rounded-full ${isOnline ? 'bg-green-500 animate-pulse' : 'bg-white/30'}`} />
           <span>Network Status</span>
         </div>
-        <div className="w-px h-3 bg-slate-700" />
+        <div className="w-px h-3 bg-white/20" />
         <div className="flex items-center gap-2">
-          <div className={`w-2 h-2 rounded-full ${isConnectedToSwarm ? 'bg-green-500' : 'bg-slate-600'}`} />
+          <div className={`w-2 h-2 rounded-full ${isConnectedToSwarm ? 'bg-green-500' : 'bg-white/30'}`} />
           <span>Swarm Ready</span>
         </div>
       </div>

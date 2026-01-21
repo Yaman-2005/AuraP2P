@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion'
 import {
   Network,
   Wifi,
-  WifiOff,
   RefreshCw,
   Plus,
   Settings,
@@ -13,7 +12,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { useAppStore } from '@/store/appStore'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -252,7 +251,7 @@ export function NetworkView() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="absolute top-6 left-6 right-6 z-10"
+          className="absolute top-6 left-6 lg:left-20 right-6 z-10"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -260,7 +259,7 @@ export function NetworkView() {
                 <Network className="w-6 h-6 text-cyan-400" />
                 Network Topology
               </h1>
-              <p className="text-slate-400 text-sm mt-1">
+              <p className="text-white/60 text-sm mt-1">
                 Visual representation of your P2P swarm
               </p>
             </div>
@@ -297,25 +296,25 @@ export function NetworkView() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-6 left-6 p-4 rounded-xl bg-slate-900/80 backdrop-blur-xl border border-slate-800"
+          className="absolute bottom-6 left-6 p-4 rounded-xl glass border border-white/15"
         >
           <h4 className="text-sm font-semibold text-white mb-3">Legend</h4>
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs">
-              <span className="w-3 h-3 rounded-full bg-cyan-500" />
-              <span className="text-slate-300">Online Peer</span>
+              <span className="w-3 h-3 rounded-full bg-cyan-400" />
+              <span className="text-white/70">Online Peer</span>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="w-3 h-3 rounded-full bg-amber-500" />
-              <span className="text-slate-300">Syncing</span>
+              <span className="w-3 h-3 rounded-full bg-amber-400" />
+              <span className="text-white/70">Syncing</span>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="w-3 h-3 rounded-full bg-slate-500" />
-              <span className="text-slate-300">Offline</span>
+              <span className="w-3 h-3 rounded-full bg-white/40" />
+              <span className="text-white/50">Offline</span>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span className="w-3 h-3 rounded-full bg-purple-500" />
-              <span className="text-slate-300">Orchestrator</span>
+              <span className="w-3 h-3 rounded-full bg-violet-400" />
+              <span className="text-white/50">Orchestrator</span>
             </div>
           </div>
         </motion.div>
@@ -325,11 +324,11 @@ export function NetworkView() {
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="w-96 border-l border-slate-800 bg-slate-900/50 backdrop-blur-xl"
+        className="w-96 border-l border-white/10 glass-elevated"
       >
-        <div className="p-4 border-b border-slate-800">
+        <div className="p-4 border-b border-white/10">
           <h3 className="font-semibold text-white">Peer Details</h3>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-white/50 mt-1">
             Click a peer to view details
           </p>
         </div>
@@ -352,8 +351,8 @@ export function NetworkView() {
                   >
                     <Card
                       className={cn(
-                        'cursor-pointer transition-all duration-200 hover:border-slate-600',
-                        isSelected && 'border-cyan-500/50 bg-cyan-500/5'
+                        'cursor-pointer transition-all duration-200 hover:border-white/30',
+                        isSelected && 'border-violet-400/50 bg-violet-500/10'
                       )}
                     >
                       <CardContent className="p-4">
@@ -362,10 +361,10 @@ export function NetworkView() {
                             className={cn(
                               'w-12 h-12 rounded-xl flex items-center justify-center border',
                               peer.status === 'online'
-                                ? 'bg-cyan-500/20 border-cyan-500/30 text-cyan-400'
+                                ? 'bg-cyan-500/20 border-cyan-400/30 text-cyan-400'
                                 : peer.status === 'syncing'
-                                ? 'bg-amber-500/20 border-amber-500/30 text-amber-400'
-                                : 'bg-slate-700/50 border-slate-600 text-slate-400'
+                                ? 'bg-amber-500/20 border-amber-400/30 text-amber-400'
+                                : 'bg-white/10 border-white/20 text-white/40'
                             )}
                           >
                             <DeviceIcon className="w-6 h-6" />
@@ -386,7 +385,7 @@ export function NetworkView() {
                                 {peer.status}
                               </Badge>
                             </div>
-                            <p className="text-xs text-slate-400">{peer.ip}</p>
+                            <p className="text-xs text-white/50">{peer.ip}</p>
                           </div>
                         </div>
 
@@ -396,33 +395,33 @@ export function NetworkView() {
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: 'auto' }}
                               exit={{ opacity: 0, height: 0 }}
-                              className="mt-4 pt-4 border-t border-slate-700 space-y-3"
+                              className="mt-4 pt-4 border-t border-white/10 space-y-3"
                             >
                               <div className="grid grid-cols-2 gap-3 text-sm">
                                 <div>
-                                  <p className="text-slate-400">CPU</p>
+                                  <p className="text-white/50">CPU</p>
                                   <p className="text-white font-medium">{peer.hardware.cpu}</p>
                                 </div>
                                 <div>
-                                  <p className="text-slate-400">Accelerator</p>
+                                  <p className="text-white/50">Accelerator</p>
                                   <p className="text-cyan-400 font-medium">{peer.hardware.accelerator}</p>
                                 </div>
                                 <div>
-                                  <p className="text-slate-400">RAM</p>
+                                  <p className="text-white/50">RAM</p>
                                   <p className="text-white font-medium">{peer.hardware.ram}GB</p>
                                 </div>
                                 <div>
-                                  <p className="text-slate-400">VRAM</p>
+                                  <p className="text-white/50">VRAM</p>
                                   <p className="text-white font-medium">{peer.hardware.vram}GB</p>
                                 </div>
                                 <div>
-                                  <p className="text-slate-400">Layers</p>
+                                  <p className="text-white/50">Layers</p>
                                   <p className="text-white font-medium">
                                     {peer.layers.start}-{peer.layers.end}
                                   </p>
                                 </div>
                                 <div>
-                                  <p className="text-slate-400">Latency</p>
+                                  <p className="text-white/50">Latency</p>
                                   <p className="text-white font-medium">{peer.latency}ms</p>
                                 </div>
                               </div>

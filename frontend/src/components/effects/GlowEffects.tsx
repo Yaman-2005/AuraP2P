@@ -16,10 +16,10 @@ export function GlowingOrb({ className, size = 'md', color = 'cyan' }: GlowingOr
   }
 
   const colors = {
-    cyan: 'from-cyan-500/30 via-cyan-500/10 to-transparent',
-    purple: 'from-purple-500/30 via-purple-500/10 to-transparent',
-    blue: 'from-blue-500/30 via-blue-500/10 to-transparent',
-    emerald: 'from-emerald-500/30 via-emerald-500/10 to-transparent',
+    cyan: 'from-cyan-500/20 via-cyan-500/5 to-transparent',
+    purple: 'from-purple-500/20 via-purple-500/5 to-transparent',
+    blue: 'from-blue-500/20 via-blue-500/5 to-transparent',
+    emerald: 'from-emerald-500/20 via-emerald-500/5 to-transparent',
   }
 
   return (
@@ -51,7 +51,7 @@ export function AnimatedGrid({ className }: AnimatedGridProps) {
   return (
     <div className={cn('absolute inset-0 overflow-hidden pointer-events-none', className)}>
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage: `
             linear-gradient(to right, rgb(6, 182, 212) 1px, transparent 1px),
@@ -63,7 +63,7 @@ export function AnimatedGrid({ className }: AnimatedGridProps) {
       <motion.div
         className="absolute inset-0"
         style={{
-          background: 'radial-gradient(ellipse at center, transparent 0%, rgb(15 23 42) 70%)',
+          background: 'radial-gradient(ellipse at center, transparent 0%, rgb(248 250 252) 70%)',
         }}
       />
     </div>
@@ -80,7 +80,7 @@ export function FloatingParticles({ count = 20 }: FloatingParticlesProps) {
       {Array.from({ length: count }).map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-1 h-1 bg-cyan-400/30 rounded-full"
+          className="absolute w-1 h-1 bg-cyan-500/20 rounded-full"
           initial={{
             x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
             y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 800),
@@ -160,7 +160,7 @@ export function GlitchText({ children, className }: GlitchTextProps) {
     <div className={cn('relative inline-block', className)}>
       <span className="relative z-10">{children}</span>
       <motion.span
-        className="absolute top-0 left-0 text-cyan-400 opacity-70 z-0"
+        className="absolute top-0 left-0 text-cyan-500 opacity-50 z-0"
         animate={{
           x: [-2, 2, -2],
         }}
@@ -173,7 +173,7 @@ export function GlitchText({ children, className }: GlitchTextProps) {
         {children}
       </motion.span>
       <motion.span
-        className="absolute top-0 left-0 text-purple-400 opacity-70 z-0"
+        className="absolute top-0 left-0 text-purple-500 opacity-50 z-0"
         animate={{
           x: [2, -2, 2],
         }}

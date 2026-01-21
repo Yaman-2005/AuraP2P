@@ -12,33 +12,117 @@ code, pre, .font-mono {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* Scrollbar styling */
+/* Scrollbar styling - glass themed */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(30 41 59);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(71 85 105);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(100 116 139);
+  background: rgba(255, 255, 255, 0.4);
 }
 
 /* Selection */
 ::selection {
-  background: rgb(6 182 212 / 0.3);
-  color: white;
+  background: rgb(139 92 246 / 0.3);
+  color: rgb(255 255 255);
 }
 
-/* Custom animations */
+/* ==================== GLASSMORPHISM SYSTEM ==================== */
+
+/* Primary glass card - frosted effect */
+.glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* Elevated glass - more prominent */
+.glass-elevated {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* Subtle glass - lighter effect */
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+/* Glass pill buttons */
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 9999px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.glass-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(139, 92, 246, 0.15),
+    0 4px 16px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Glass input */
+.glass-input {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.glass-input:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.glass-input:focus {
+  border-color: rgba(139, 92, 246, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 0 0 4px rgba(139, 92, 246, 0.15),
+    0 0 20px rgba(139, 92, 246, 0.2),
+    inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+/* ==================== ANIMATIONS ==================== */
+
 @keyframes gradient-shift {
   0%, 100% {
     background-position: 0% 50%;
@@ -59,11 +143,26 @@ code, pre, .font-mono {
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(6, 182, 212, 0.5);
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
   }
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
 }
 
 .animate-gradient {
@@ -79,19 +178,35 @@ code, pre, .font-mono {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Glass effect */
-.glass {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+.animate-twinkle {
+  animation-name: twinkle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
 }
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ==================== GRADIENT BACKGROUNDS ==================== */
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+  background: linear-gradient(135deg, #06b6d4, #8b5cf6, #f472b6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Subtle text glow */
+.text-glow {
+  text-shadow: 0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(6, 182, 212, 0.2);
+}
+
+.text-glow-subtle {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 /* Radial gradient background */
@@ -99,18 +214,81 @@ code, pre, .font-mono {
   background: radial-gradient(ellipse at center, var(--tw-gradient-stops));
 }
 
-/* Noise texture overlay */
+/* Horizon glow background */
+.horizon-glow {
+  background: radial-gradient(
+    120% 60% at 50% 100%,
+    rgba(139, 92, 246, 0.25) 0%,
+    rgba(6, 182, 212, 0.15) 30%,
+    transparent 70%
+  );
+  filter: blur(40px);
+}
+
+/* ==================== NOISE & TEXTURE ==================== */
+
 .noise::before {
   content: '';
   position: absolute;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noise)'/%3E%3C/svg%3E");
-  opacity: 0.02;
+  opacity: 0.03;
   pointer-events: none;
+  mix-blend-mode: overlay;
 }
 
-/* Focus styles */
+/* ==================== FOCUS & INTERACTION ==================== */
+
 *:focus-visible {
-  outline: 2px solid rgb(6 182 212 / 0.5);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 
+    0 0 0 2px rgba(139, 92, 246, 0.4),
+    0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+.glass input:focus-visible,
+.glass-input:focus-visible {
+  outline: none !important;
+}
+
+/* ==================== SHADOWS ==================== */
+
+.shadow-glass {
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-glass-lg {
+  box-shadow: 
+    0 16px 64px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.shadow-glow {
+  box-shadow: 
+    0 0 40px rgba(139, 92, 246, 0.15),
+    0 0 80px rgba(6, 182, 212, 0.1);
+}
+
+.shadow-glow-hover:hover {
+  box-shadow: 
+    0 0 60px rgba(139, 92, 246, 0.25),
+    0 0 100px rgba(6, 182, 212, 0.15);
+}
+
+/* ==================== TYPOGRAPHY ==================== */
+
+.heading-futuristic {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.text-soft {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.text-softer {
+  color: rgba(255, 255, 255, 0.5);
 }

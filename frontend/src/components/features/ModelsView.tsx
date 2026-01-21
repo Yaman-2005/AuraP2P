@@ -7,7 +7,6 @@ import {
   Play,
   Pause,
   Check,
-  Loader2,
   Info,
   Search,
   Filter,
@@ -115,6 +114,7 @@ export function ModelsView() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
+          className="lg:pl-16"
         >
           <div className="flex items-center justify-between">
             <div>
@@ -122,7 +122,7 @@ export function ModelsView() {
                 <Layers className="w-6 h-6 text-cyan-400" />
                 Model Library
               </h1>
-              <p className="text-slate-400 text-sm mt-1">
+              <p className="text-white/60 text-sm mt-1">
                 Manage and shard AI models across your swarm
               </p>
             </div>
@@ -143,7 +143,7 @@ export function ModelsView() {
           className="flex items-center gap-4"
         >
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
             <Input
               placeholder="Search models..."
               value={searchQuery}
@@ -207,18 +207,18 @@ export function ModelsView() {
                       exit={{ opacity: 0, scale: 0.95 }}
                       transition={{ delay: index * 0.05 }}
                     >
-                      <Card className="hover:border-slate-600 transition-all">
+                      <Card className="hover:border-white/30 transition-all">
                         <CardContent className="p-6">
                           <div className="flex items-start justify-between">
                             <div className="flex items-center gap-4">
-                              <div className="w-14 h-14 rounded-xl bg-linear-to-br from-slate-700 to-slate-800 flex items-center justify-center border border-slate-600">
-                                <Cpu className="w-7 h-7 text-slate-400" />
+                              <div className="w-14 h-14 rounded-xl bg-linear-to-br from-violet-500/20 to-cyan-500/20 flex items-center justify-center border border-white/20">
+                                <Cpu className="w-7 h-7 text-white/60" />
                               </div>
                               <div>
                                 <h3 className="text-lg font-semibold text-white">
                                   {model.name}
                                 </h3>
-                                <p className="text-sm text-slate-400">
+                                <p className="text-sm text-white/50">
                                   {model.description}
                                 </p>
                               </div>
@@ -228,11 +228,11 @@ export function ModelsView() {
 
                           <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                             <div>
-                              <p className="text-slate-400">Total Layers</p>
+                              <p className="text-white/50">Total Layers</p>
                               <p className="text-white font-medium">{model.totalLayers}</p>
                             </div>
                             <div>
-                              <p className="text-slate-400">Required VRAM</p>
+                              <p className="text-white/50">Required VRAM</p>
                               <p className="text-white font-medium">
                                 ~{Math.ceil(parseInt(model.size) * 0.8)}GB
                               </p>
@@ -242,7 +242,7 @@ export function ModelsView() {
                           {downloading === model.id ? (
                             <div className="mt-4">
                               <div className="flex justify-between text-sm mb-2">
-                                <span className="text-slate-400">Downloading...</span>
+                                <span className="text-white/50">Downloading...</span>
                                 <span className="text-cyan-400">
                                   {Math.round(downloadProgress)}%
                                 </span>
@@ -276,18 +276,18 @@ export function ModelsView() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-slate-400 mb-6">
+                  <p className="text-white/50 mb-6">
                     Configure how model layers are distributed across your swarm peers.
                   </p>
 
                   {activeModel ? (
                     <div className="space-y-6">
                       {/* Active model info */}
-                      <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700">
+                      <div className="p-4 rounded-xl glass border border-white/10">
                         <div className="flex items-center justify-between mb-4">
                           <div>
                             <h4 className="font-semibold text-white">{activeModel.name}</h4>
-                            <p className="text-sm text-slate-400">
+                            <p className="text-sm text-white/50">
                               {activeModel.totalLayers} total layers
                             </p>
                           </div>
@@ -295,7 +295,7 @@ export function ModelsView() {
                         </div>
 
                         {/* Layer distribution visualization */}
-                        <div className="relative h-12 bg-slate-900 rounded-lg overflow-hidden">
+                        <div className="relative h-12 bg-white/5 rounded-lg overflow-hidden border border-white/10">
                           {activePeers.map((peer, index) => {
                             const layerCount = peer.layers.end - peer.layers.start + 1
                             const width = (layerCount / activeModel.totalLayers) * 100
@@ -308,7 +308,7 @@ export function ModelsView() {
                                 transition={{ delay: index * 0.2, duration: 0.5 }}
                                 className={cn(
                                   'absolute top-0 bottom-0 flex items-center justify-center',
-                                  index === 0 ? 'left-0 bg-cyan-500/30 border-r border-slate-700' : 'right-0 bg-purple-500/30'
+                                  index === 0 ? 'left-0 bg-cyan-500/30 border-r border-white/10' : 'right-0 bg-violet-500/30'
                                 )}
                               >
                                 <span className="text-xs font-medium text-white">
@@ -319,7 +319,7 @@ export function ModelsView() {
                           })}
                         </div>
 
-                        <div className="flex justify-between mt-2 text-xs text-slate-400">
+                        <div className="flex justify-between mt-2 text-xs text-white/40">
                           <span>Layer 1</span>
                           <span>Layer {activeModel.totalLayers}</span>
                         </div>
@@ -330,22 +330,22 @@ export function ModelsView() {
                         {activePeers.map((peer) => (
                           <div
                             key={peer.id}
-                            className="p-4 rounded-xl bg-slate-800/30 border border-slate-700 flex items-center justify-between"
+                            className="p-4 rounded-xl glass border border-white/10 flex items-center justify-between"
                           >
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center border border-cyan-500/30">
+                              <div className="w-10 h-10 rounded-lg bg-linear-to-br from-cyan-500/20 to-violet-600/20 flex items-center justify-center border border-cyan-400/30">
                                 <Cpu className="w-5 h-5 text-cyan-400" />
                               </div>
                               <div>
                                 <h5 className="font-medium text-white">{peer.name}</h5>
-                                <p className="text-xs text-slate-400">{peer.hardware.accelerator}</p>
+                                <p className="text-xs text-white/50">{peer.hardware.accelerator}</p>
                               </div>
                             </div>
                             <div className="text-right">
                               <p className="text-lg font-bold text-white">
                                 Layers {peer.layers.start}-{peer.layers.end}
                               </p>
-                              <p className="text-xs text-slate-400">
+                              <p className="text-xs text-white/50">
                                 {peer.layers.end - peer.layers.start + 1} layers • {peer.throughput} tok/s
                               </p>
                             </div>
@@ -353,7 +353,7 @@ export function ModelsView() {
                         ))}
                       </div>
 
-                      <div className="flex items-center gap-2 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                      <div className="flex items-center gap-2 p-4 rounded-xl bg-amber-500/10 border border-amber-400/30">
                         <Info className="w-5 h-5 text-amber-400 shrink-0" />
                         <p className="text-sm text-amber-200">
                           Layer distribution is automatically optimized based on each peer's VRAM and compute capabilities via Azure Fluid Relay.
@@ -362,9 +362,9 @@ export function ModelsView() {
                     </div>
                   ) : (
                     <div className="text-center py-12">
-                      <Layers className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-                      <p className="text-slate-400">No model is currently active</p>
-                      <p className="text-sm text-slate-500">
+                      <Layers className="w-12 h-12 text-white/30 mx-auto mb-4" />
+                      <p className="text-white/50">No model is currently active</p>
+                      <p className="text-sm text-white/40">
                         Select a model from the Installed tab to configure sharding
                       </p>
                     </div>
@@ -402,11 +402,11 @@ function ModelCard({ model, isActive, onActivate }: ModelCardProps) {
                 'w-14 h-14 rounded-xl flex items-center justify-center border',
                 isActive
                   ? 'bg-linear-to-br from-cyan-500/20 to-blue-600/20 border-cyan-500/30'
-                  : 'bg-slate-800 border-slate-700'
+                  : 'glass border-white/10'
               )}
             >
               <Cpu
-                className={cn('w-7 h-7', isActive ? 'text-cyan-400' : 'text-slate-400')}
+                className={cn('w-7 h-7', isActive ? 'text-cyan-400' : 'text-white/50')}
               />
             </div>
             <div>
@@ -414,7 +414,7 @@ function ModelCard({ model, isActive, onActivate }: ModelCardProps) {
                 {model.name}
                 {isActive && <Check className="w-4 h-4 text-cyan-400" />}
               </h3>
-              <p className="text-sm text-slate-400">{model.description}</p>
+              <p className="text-sm text-white/50">{model.description}</p>
             </div>
           </div>
           <Badge variant={model.status === 'ready' ? 'success' : 'default'}>
@@ -424,24 +424,24 @@ function ModelCard({ model, isActive, onActivate }: ModelCardProps) {
 
         <div className="mt-4 grid grid-cols-3 gap-4 text-sm">
           <div>
-            <p className="text-slate-400">Layers</p>
+            <p className="text-white/50">Layers</p>
             <p className="text-white font-medium">
               {model.loadedLayers}/{model.totalLayers}
             </p>
           </div>
           <div>
-            <p className="text-slate-400">Status</p>
+            <p className="text-white/50">Status</p>
             <p
               className={cn(
                 'font-medium capitalize',
-                model.status === 'ready' ? 'text-emerald-400' : 'text-slate-300'
+                model.status === 'ready' ? 'text-emerald-400' : 'text-white/60'
               )}
             >
               {model.status}
             </p>
           </div>
           <div>
-            <p className="text-slate-400">VRAM</p>
+            <p className="text-white/50">VRAM</p>
             <p className="text-white font-medium">
               ~{Math.ceil(parseInt(model.size) * 0.6)}GB
             </p>
@@ -468,7 +468,7 @@ function ModelCard({ model, isActive, onActivate }: ModelCardProps) {
             </Button>
           )}
           <Button variant="ghost" size="icon">
-            <Trash2 className="w-4 h-4 text-slate-400" />
+            <Trash2 className="w-4 h-4 text-white/40" />
           </Button>
         </div>
       </CardContent>

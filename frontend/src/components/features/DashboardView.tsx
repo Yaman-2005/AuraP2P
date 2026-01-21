@@ -55,7 +55,7 @@ const item = {
 
 export function DashboardView() {
   const { stats, peers, activeModel } = useAppStore()
-  const activePeers = peers.filter((p) => p.status === 'online')
+  // Removed unused variable to satisfy TS strict settings
 
   return (
     <ScrollArea className="h-full">
@@ -66,9 +66,9 @@ export function DashboardView() {
         className="p-6 space-y-6"
       >
         {/* Header */}
-        <motion.div variants={item}>
+        <motion.div variants={item} className="lg:pl-16">
           <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-          <p className="text-slate-400">
+          <p className="text-white/60">
             Real-time overview of your distributed AI swarm
           </p>
         </motion.div>
@@ -132,16 +132,18 @@ export function DashboardView() {
                         <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis dataKey="time" stroke="#64748b" fontSize={12} />
-                    <YAxis stroke="#64748b" fontSize={12} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis dataKey="time" stroke="rgba(255,255,255,0.5)" fontSize={12} />
+                    <YAxis stroke="rgba(255,255,255,0.5)" fontSize={12} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        borderRadius: '12px',
+                        backdropFilter: 'blur(16px)',
+                        color: '#fff',
                       }}
-                      labelStyle={{ color: '#e2e8f0' }}
+                      labelStyle={{ color: 'rgba(255,255,255,0.7)' }}
                     />
                     <Area
                       type="monotone"
@@ -160,7 +162,7 @@ export function DashboardView() {
           <Card glow>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <HardDrive className="w-5 h-5 text-purple-400" />
+                <HardDrive className="w-5 h-5 text-violet-400" />
                 Layer Distribution
               </CardTitle>
             </CardHeader>
@@ -168,20 +170,22 @@ export function DashboardView() {
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={layerDistribution} layout="vertical">
-                    <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                    <XAxis type="number" stroke="#64748b" fontSize={12} />
-                    <YAxis dataKey="name" type="category" stroke="#64748b" fontSize={12} width={100} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis type="number" stroke="rgba(255,255,255,0.5)" fontSize={12} />
+                    <YAxis dataKey="name" type="category" stroke="rgba(255,255,255,0.5)" fontSize={12} width={100} />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: '#1e293b',
-                        border: '1px solid #334155',
-                        borderRadius: '8px',
+                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        border: '1px solid rgba(255,255,255,0.2)',
+                        borderRadius: '12px',
+                        backdropFilter: 'blur(16px)',
+                        color: '#fff',
                       }}
-                      labelStyle={{ color: '#e2e8f0' }}
+                      labelStyle={{ color: 'rgba(255,255,255,0.7)' }}
                     />
                     <Bar
                       dataKey="layers"
-                      fill="#06b6d4"
+                      fill="#8b5cf6"
                       radius={[0, 4, 4, 0]}
                     />
                   </BarChart>
@@ -206,16 +210,16 @@ export function DashboardView() {
                   <motion.div
                     key={peer.id}
                     whileHover={{ scale: 1.02 }}
-                    className="p-4 rounded-xl bg-slate-800/50 border border-slate-700 hover:border-slate-600 transition-all"
+                    className="p-4 rounded-xl glass border border-white/10 hover:border-white/20 transition-all"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-linear-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center border border-cyan-500/30">
-                          <Cpu className="w-5 h-5 text-cyan-400" />
+                        <div className="w-10 h-10 rounded-lg bg-linear-to-br from-violet-500/30 to-cyan-500/30 flex items-center justify-center border border-violet-400/40">
+                          <Cpu className="w-5 h-5 text-violet-300" />
                         </div>
                         <div>
                           <h4 className="font-semibold text-white">{peer.name}</h4>
-                          <p className="text-xs text-slate-400">{peer.ip}</p>
+                          <p className="text-xs text-white/50">{peer.ip}</p>
                         </div>
                       </div>
                       <Badge
@@ -233,23 +237,23 @@ export function DashboardView() {
                     </div>
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Layers</span>
+                        <span className="text-white/50">Layers</span>
                         <span className="text-white">
                           {peer.layers.start}-{peer.layers.end}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">VRAM</span>
+                        <span className="text-white/50">VRAM</span>
                         <span className="text-white">{peer.hardware.vram}GB</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-slate-400">Throughput</span>
+                        <span className="text-white/50">Throughput</span>
                         <span className="text-cyan-400">{peer.throughput} tok/s</span>
                       </div>
                       <div className="mt-3">
                         <div className="flex justify-between text-xs mb-1">
-                          <span className="text-slate-500">Utilization</span>
-                          <span className="text-slate-400">
+                          <span className="text-white/40">Utilization</span>
+                          <span className="text-white/60">
                             {peer.status === 'online' ? '78%' : '0%'}
                           </span>
                         </div>
@@ -277,20 +281,20 @@ export function DashboardView() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xl font-bold text-white">{activeModel.name}</h3>
-                    <p className="text-slate-400">{activeModel.description}</p>
+                    <p className="text-white/60">{activeModel.description}</p>
                   </div>
                   <div className="text-right">
                     <Badge variant="success" pulse>
                       {activeModel.status}
                     </Badge>
-                    <p className="text-sm text-slate-400 mt-2">
+                    <p className="text-sm text-white/50 mt-2">
                       {activeModel.loadedLayers}/{activeModel.totalLayers} layers loaded
                     </p>
                   </div>
                 </div>
                 <div className="mt-4">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-slate-400">Model Loading Progress</span>
+                    <span className="text-white/50">Model Loading Progress</span>
                     <span className="text-white">
                       {Math.round((activeModel.loadedLayers / activeModel.totalLayers) * 100)}%
                     </span>
@@ -320,10 +324,10 @@ interface StatCardProps {
 
 function StatCard({ title, value, subtitle, icon: Icon, trend, color }: StatCardProps) {
   const colorClasses = {
-    cyan: 'from-cyan-500/20 to-blue-600/20 border-cyan-500/30 text-cyan-400',
-    purple: 'from-purple-500/20 to-pink-600/20 border-purple-500/30 text-purple-400',
-    emerald: 'from-emerald-500/20 to-teal-600/20 border-emerald-500/30 text-emerald-400',
-    amber: 'from-amber-500/20 to-orange-600/20 border-amber-500/30 text-amber-400',
+    cyan: 'from-cyan-500/30 to-blue-600/30 border-cyan-400/40 text-cyan-300',
+    purple: 'from-violet-500/30 to-pink-600/30 border-violet-400/40 text-violet-300',
+    emerald: 'from-emerald-500/30 to-teal-600/30 border-emerald-400/40 text-emerald-300',
+    amber: 'from-amber-500/30 to-orange-600/30 border-amber-400/40 text-amber-300',
   }
 
   return (
@@ -332,12 +336,12 @@ function StatCard({ title, value, subtitle, icon: Icon, trend, color }: StatCard
         <CardContent className="p-6">
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm text-slate-400 mb-1">{title}</p>
+              <p className="text-sm text-white/60 mb-1">{title}</p>
               <p className="text-3xl font-bold text-white">{value}</p>
-              <p className="text-xs text-slate-500 mt-1">{subtitle}</p>
+              <p className="text-xs text-white/40 mt-1">{subtitle}</p>
             </div>
             <div
-              className={`w-12 h-12 rounded-xl bg-linear-to-br ${colorClasses[color]} flex items-center justify-center border`}
+              className={`w-12 h-12 rounded-xl bg-linear-to-br ${colorClasses[color]} flex items-center justify-center border backdrop-blur-sm`}
             >
               <Icon className="w-6 h-6" />
             </div>
@@ -352,13 +356,13 @@ function StatCard({ title, value, subtitle, icon: Icon, trend, color }: StatCard
               <span className={trend > 0 ? 'text-emerald-400' : 'text-red-400'}>
                 {Math.abs(trend)}%
               </span>
-              <span className="text-slate-500">from last hour</span>
+              <span className="text-white/50">from last hour</span>
             </div>
           )}
         </CardContent>
         {/* Decorative gradient */}
         <div
-          className={`absolute inset-0 bg-linear-to-br ${colorClasses[color]} opacity-5 pointer-events-none`}
+          className={`absolute inset-0 bg-linear-to-br ${colorClasses[color]} opacity-10 pointer-events-none`}
         />
       </Card>
     </motion.div>
