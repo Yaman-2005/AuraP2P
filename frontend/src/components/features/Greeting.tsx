@@ -19,7 +19,7 @@ const Greeting = ({ name = "Sumit" }: GreetingProps) => {
         </span>
       </div>
       <h1 className="text-3xl md:text-4xl font-semibold text-white text-glow">
-        It's time to start counting down to 2026
+        Your AI. Your Network. Your Power.
       </h1>
     </div>
   );
