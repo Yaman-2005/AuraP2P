@@ -52,9 +52,24 @@ export function ChatView() {
   const doSubmit = async () => {
     if (!input.trim() || isGenerating) return
 
-    // If not connected to swarm, show animation in chat
+    // If not connected to swarm, show error message and prompt to connect
     if (!isConnectedToSwarm) {
-      setShowNoConnectionAnimation(true)
+      const userMessage: Message = {
+        id: crypto.randomUUID(),
+        role: 'user',
+        content: input.trim(),
+        timestamp: new Date(),
+      }
+      addMessage(userMessage)
+
+      // Show connection failed response
+      addMessage({
+        id: crypto.randomUUID(),
+        role: 'assistant',
+        content: "⚠️ Connection failed. Please connect to the swarm network first using the 'Connect to Swarm' button above, then try again.",
+        timestamp: new Date(),
+      })
+      
       setInput('')
       return
     }
@@ -104,19 +119,14 @@ export function ChatView() {
       }
     }, 800)
 
-    // Simulate connection process (in real app, this would be actual API calls)
+    // Wait for connection attempt to complete
     setTimeout(() => {
       clearInterval(interval)
       setIsConnecting(false)
       setConnectionAdvantages([])
       
-      // After connection, show success message
-      addMessage({
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        content: "Connected to swarm! Now powered by distributed AI network.",
-        timestamp: new Date(),
-      })
+      // Check actual connection status from store
+      // Note: Connection is handled by ConnectButton, this just shows visual feedback
     }, 6000)
   }
 
@@ -343,12 +353,12 @@ export function ChatView() {
                       className="w-6 h-6 rounded-full border-2 border-red-400 border-t-transparent"
                     />
                     <span className="text-red-400 text-sm font-medium">
-                      Not connected to swarm
+                      Connection Failed - Retry Required
                     </span>
                   </div>
                   
                   <p className="text-white/60 text-sm">
-                    Connect to the swarm network to use AI chat
+                    Failed to connect to the swarm network. Please click 'Connect to Swarm' button to retry.
                   </p>
                 </Card>
               </motion.div>

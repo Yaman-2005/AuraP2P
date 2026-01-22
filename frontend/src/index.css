@@ -241,14 +241,21 @@ code, pre, .font-mono {
 
 *:focus-visible {
   outline: none;
+}
+
+button:focus-visible,
+a:focus-visible {
   box-shadow: 
     0 0 0 2px rgba(139, 92, 246, 0.4),
     0 0 20px rgba(139, 92, 246, 0.3);
 }
 
+input:focus-visible,
+textarea:focus-visible,
 .glass input:focus-visible,
 .glass-input:focus-visible {
   outline: none !important;
+  box-shadow: none !important;
 }
 
 /* ==================== SHADOWS ==================== */

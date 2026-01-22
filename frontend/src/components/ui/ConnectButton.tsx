@@ -27,7 +27,10 @@ export function ConnectButton() {
     try {
       // Step 1: Go online
       setProgress(30)
-      await fetch(`${API_BASE}/go-online`, { method: 'POST' })
+      const onlineRes = await fetch(`${API_BASE}/go-online`, { method: 'POST' })
+      if (!onlineRes.ok) {
+        throw new Error('Failed to go online')
+      }
       setOnline(true)
       setProgress(60)
 
@@ -39,9 +42,13 @@ export function ConnectButton() {
         body: JSON.stringify({ ip: DEFAULT_SWARM_IP }),
       })
 
+      if (!res.ok) {
+        throw new Error('Connection failed - server unavailable')
+      }
+
       const data = await res.json()
       if (!data.success) {
-        throw new Error(data.error || 'Failed to connect')
+        throw new Error(data.error || 'Failed to connect to swarm')
       }
 
       setConnectedToSwarm(true)
@@ -51,7 +58,9 @@ export function ConnectButton() {
       setTimeout(() => setProgress(0), 1000)
       
     } catch (e: any) {
-      setError(e.message)
+      setError(e.message || 'Connection failed')
+      setConnectedToSwarm(false)
+      setOnline(false)
       setProgress(0)
     } finally {
       setLoading(false)
@@ -103,7 +112,7 @@ export function ConnectButton() {
           >
             <div className="flex items-center gap-2 text-red-400">
               <WifiOff className="w-4 h-4" />
-              <span className="text-sm font-medium">{error}</span>
+              <span className="text-sm font-medium">Failed to fetch - Connection failed. Click to retry.</span>
             </div>
           </motion.div>
         )}
